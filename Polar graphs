@@ -1,0 +1,100 @@
+import matplotlib as mpl
+import matplotlib.pyplot as plt
+import numpy as np
+import pandas as pd
+from colormath.color_objects import LabColor, sRGBColor, LCHabColor
+from colormath.color_conversions import convert_color
+from colorspacious import cspace_converter
+
+df1 = pd.read_excel("LAB.xlsx", sheet_name="CW") # loading the data frame
+
+l = df1["L*"]
+a = df1["a*"]
+b = df1["b*"]
+spad = df1["SPAD"]
+leaves = df1["Leaf"]
+c_stdev = df1["C stdev"]
+h_stdev = df1["h stdev"]
+
+lab = []
+for i in range(len(leaves)):
+    lab.append((l[i], a[i], b[i]))
+
+fig = plt.figure(figsize = (10, 10), dpi = 1200)
+ax = fig.add_subplot(1,1,1, projection='polar')
+nitrogen = ["AG", "AH","BG", "BH", "CH", "CG", "AI", "AJ", "BI", "BJ", "CI", "CJ", "AK", "AL", "BK", "BL", "CK", "CL", "DG", "DH", "DI", "DJ", "DK", "DL"]
+water = ["AA", "AB", "BA", "BB", "CA", "CB", "AC", "AD", "BC", "BD", "CC", "CD", "AE", "AF", "BE", "BF", "CE", "CF", "DA", "DB", "DC", "DD", "DE", "DF"]
+
+#################### PLOTTING WO + N PLANTS ####################
+
+theta, r, colors, markertype, markeredgecolor, msize = [], [], [], [], [], []
+for i in range(len(leaves)):
+    placeholder = lab[i]
+    lableaf = LabColor(placeholder[0],placeholder[1], placeholder[2], illuminant="d65")
+    lchleaf = convert_color(lableaf,LCHabColor).get_value_tuple()
+    rgbleaf = convert_color(lableaf,sRGBColor).get_rgb_hex()
+    r.append(lchleaf[1])
+    theta.append(np.deg2rad(lchleaf[2]))
+    colors.append(rgbleaf)
+    markertype.append("o" if (leaves[i])[:2] in water else "^")
+    markeredgecolor.append("#bfcdff" if (leaves[i])[:2] in water else "#b0250c")
+    msize.append("40" if (leaves[i])[:2] in water else "50")
+
+for i in range(len(r)):
+    ax.scatter(theta[i], r[i], c = colors[i], s = msize[i], edgecolor = '#454545', linewidths= 1, marker = markertype[i], zorder = 999)
+ax.set_thetamin(90)
+ax.set_thetamax(135)
+# plt.savefig("all polar graph.png", dpi = 1200, bbox_inches = 'tight')
+plt.show()
+
+#################### PLOTTING ONLY N PLANTS ####################
+
+theta, r, colors, markertype, markeredgecolor, msize, hstdev, cstdev = [], [], [], [], [], [], [], []
+for i in range(len(leaves)):
+    placeholder = lab[i]
+    lableaf = LabColor(placeholder[0],placeholder[1], placeholder[2], illuminant="d65")
+    lchleaf = convert_color(lableaf,LCHabColor).get_value_tuple()
+    rgbleaf = convert_color(lableaf,sRGBColor).get_rgb_hex()
+    r.append(lchleaf[1])
+    theta.append(np.deg2rad(lchleaf[2]))
+    colors.append(rgbleaf)
+    markertype.append("o" if (leaves[i])[:2] in water else "^")
+    markeredgecolor.append("#bfcdff" if (leaves[i])[:2] in water else "#b0250c")
+    msize.append(0 if (leaves[i])[:2] in water else 65)
+    hstdev.append(h_stdev[i])
+    cstdev.append(c_stdev[i])
+
+for i in range(len(r)):
+    ax.scatter(theta[i], r[i], c = colors[i], s = msize[i], edgecolor = '#454545', linewidths= 0.7, marker = markertype[i], zorder = 999)
+ax.set_thetamin(90)
+ax.set_thetamax(135)
+ax.set_rmin(20)
+ax.set_rmax(40)
+# plt.savefig("N plants polar graph.png", dpi = 1200, bbox_inches = 'tight')
+plt.show()
+
+
+#################### PLOTTING ONLY WO PLANTS ####################
+
+
+theta, r, colors, markertype, markeredgecolor, msize = [], [], [], [], [], []
+for i in range(len(leaves)):
+    placeholder = lab[i]
+    lableaf = LabColor(placeholder[0],placeholder[1], placeholder[2], illuminant="d65")
+    lchleaf = convert_color(lableaf,LCHabColor).get_value_tuple()
+    rgbleaf = convert_color(lableaf,sRGBColor).get_rgb_hex()
+    r.append(lchleaf[1])
+    theta.append(np.deg2rad(lchleaf[2]))
+    colors.append(rgbleaf)
+    markertype.append("o" if (leaves[i])[:2] in water else "^")
+    markeredgecolor.append("#bfcdff" if (leaves[i])[:2] in water else "#b0250c")
+    msize.append(50 if (leaves[i])[:2] in water else 0)
+
+for i in range(len(r)):
+    ax.scatter(theta[i], r[i], c = colors[i], s = msize[i], edgecolor = '#454545', linewidths= 1, marker = markertype[i], zorder = 999)
+ax.set_thetamin(90)
+ax.set_thetamax(135)
+ax.set_rmin(20)
+ax.set_rmax(50)
+# plt.savefig("WO plants polar graph.png", dpi = 1200, bbox_inches = 'tight')
+plt.show()
