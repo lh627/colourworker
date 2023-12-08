@@ -1,0 +1,53 @@
+import pandas as pd
+import numpy as np
+import matplotlib.pyplot as plt
+
+df = pd.read_excel("Reflectance.xlsx", sheet_name = "CW(2)")    #loading data frame
+
+spad1, spad2, spad3, spad4, spad5, spad6, spad7 =[], [], [] ,[] ,[] ,[] ,[]
+for i in range(len(df["SPAD"])):
+    if (df["SPAD"])[i] >= 10 and (df["SPAD"])[i] < 15:
+        spad1.append(i)
+    elif (df["SPAD"])[i] >= 15 and (df["SPAD"])[i] < 20:
+        spad2.append(i)
+    elif (df["SPAD"])[i] >= 20 and (df["SPAD"])[i] < 25:
+        spad3.append(i)
+    elif (df["SPAD"])[i] >= 25 and (df["SPAD"])[i] < 30:
+        spad4.append(i)
+    elif (df["SPAD"])[i] >= 30 and (df["SPAD"])[i] < 35:
+        spad5.append(i)
+    elif (df["SPAD"])[i] >= 35 and (df["SPAD"])[i] < 40:
+        spad6.append(i)
+    elif (df["SPAD"])[i] >= 40 and (df["SPAD"])[i] < 45:
+        spad7.append(i)
+    else:
+        print("Error")
+
+listofspads = [spad1, spad2, spad3, spad4, spad5, spad6, spad7]
+
+
+reflectance = np.arange(400,705,5)
+
+print(listofspads)
+index = 0
+listofspadlabels = ["10-15", "15-20", "20-25", "25-30", "30-35", "35-40", "40-45"]
+colourlist = ["#A7B14A", "#8CA03F", "#708E34", "#557D29", "#3A6C1D", "#1E5A12", "#034907"]
+
+plt.figure()
+for spads in listofspads:
+    y = []
+    for i in reflectance:
+        y.append(np.mean((df[i])[min(spads):max(spads)+1]))
+    plt.plot(reflectance, y, label = listofspadlabels[index], c = colourlist[index], zorder=1)
+    index += 1
+plt.legend()
+plt.axvline(410, color = "#66f266", zorder = -199, lw = 1, linestyle = "dashed", alpha = .5) # Chlorophyll A peak
+plt.axvline(430, color = "#66f266", zorder = -199, lw = 1, linestyle = "dashed", alpha = .5) # Chlorophyll A peak
+plt.axvline(450, color = "#66f266", zorder = -199, lw = 1, linestyle = "dashed", alpha = .5) # Chlorophyll B peak
+plt.axvline(640, color = "#66f266", zorder = -199, lw = 1, linestyle = "dashed", alpha = .5) # Chlorophyll B peak
+plt.axvline(660, color = "#66f266", zorder = -199, lw = 1, linestyle = "dashed", alpha = .5) # Chlorophyll A peak
+plt.ylabel("Colourworker Reflectance")
+plt.xlabel("Wavelength (nm)")
+plt.xlim(395,705)
+# plt.savefig("SPAD reflectance profiles graph.png", dpi = 1200, bbox_inches = 'tight')
+plt.show()
