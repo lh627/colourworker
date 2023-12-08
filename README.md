@@ -1,6 +1,8 @@
 # ColourWorker Project Code Guide
 
-## Chlorophyll + SPAD graphs
+## Plotting measured values (chlorophyll/SPAD/LAB)
+
+## Comparing measured chlorophyll contents with measured SPAD readings
 
 ### 1
 
@@ -13,3 +15,5 @@
 
 ### 3 
 
+
+## Comparing estimates with measurements
