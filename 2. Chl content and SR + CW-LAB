@@ -1,0 +1,489 @@
+import numpy as np
+import matplotlib.pyplot as plt
+import pandas as pd
+import scipy
+from sklearn.metrics import r2_score
+
+#######
+
+# Importing data frames
+df = pd.read_excel("Chlorophyll.xlsx", sheet_name = "All")
+
+df1 = pd.read_excel("Chlorophyll.xlsx", sheet_name = "WO A+B")
+
+df2 = pd.read_excel("Chlorophyll.xlsx", sheet_name = "N A+B")
+
+df3 = pd.read_excel("Reflectance.xlsx", sheet_name = "CW")
+
+df4 = pd.read_excel("LAB.xlsx", sheet_name = "SR WO1+3")
+
+df5 = pd.read_excel("LAB.xlsx", sheet_name = "SR N1+3")
+
+df6 = pd.read_excel("LAB.xlsx", sheet_name = "CW WO1+3 A+B")
+
+df7 = pd.read_excel("LAB.xlsx", sheet_name = "CW N1+3_A+B")
+
+#######
+
+# SPAD against Chl/cm2 graph
+
+#Chl
+plt.scatter(df["SPAD"], df["Chl/cm2"], marker = "o", c = "green", edgecolors = '#474746', linewidths = 0.7, label = "Total Chl") # plotting scatter values 
+a, b, c = np.polyfit(df["SPAD"], df["Chl/cm2"], 2) # creating trendline
+x = np.linspace(min(df["SPAD"]), max(df["SPAD"])) 
+y = x**2 *a + x*b + c
+plt.plot(x, y, c = "green")
+slope, intercept, r_value, p_value, std_err = scipy.stats.linregress(x, y)
+
+#ChlA
+plt.scatter(df["SPAD"], df["ChlA/cm2"], marker = "+", s = 30, c = "blue", label = "Chl A")
+a, b, c = np.polyfit(df["SPAD"], df["ChlA/cm2"], 2)
+x = np.linspace(min(df["SPAD"]), max(df["SPAD"]))
+y = x**2 *a + x*b + c
+plt.plot(x, y, c = "blue")
+slope, intercept, r_value, p_value, std_err = scipy.stats.linregress(x, y)
+
+#ChlB
+plt.scatter(df["SPAD"], df["ChlB/cm2"], marker = "1", s = 30, c = "red", label = "Chl B")
+a, b, c = np.polyfit(df["SPAD"], df["ChlB/cm2"], 2)
+x = np.linspace(min(df["SPAD"]), max(df["SPAD"]))
+y = x**2 *a + x*b + c
+plt.plot(x, y, c = "red")
+slope, intercept, r_value, p_value, std_err = scipy.stats.linregress(x, y)
+
+
+plt.title("SPAD Against Chl/cm2")
+plt.xlabel("SPAD")
+plt.ylabel("Chl/cm2")
+plt.gca().get_legend_handles_labels()
+plt.legend(fontsize = 9)
+# plt.savefig("Chl against SPAD.png", dpi = 1200, bbox_inches='tight')
+plt.show()
+
+#######
+
+# Total Chl/cm2 against spectoradiometer-measured CIELAB parameters
+
+fig,(ax1, ax2, ax3, ax4, ax5) = plt.subplots(1, 5, figsize = (45, 8.5), sharey = True) # creating graph frame
+fig.subplots_adjust(wspace=0.05)
+
+ax1.scatter(df4["L*"], df1["Chl/cm2"], c = 'b', edgecolors = '#474746', linewidths = 0.7) # plotting WO samples
+ax1.scatter(df5["L*"], df2["Chl/cm2"], marker = '^', c = 'r', edgecolors = '#474746', linewidths = 0.7) # plotting N samples in a different colour
+a, b, c = np.polyfit(df4["L*"], df1["Chl/cm2"], 2) # creating trendline
+x = np.linspace(min(df4["L*"]), max(df4["L*"]))
+y = x**2 *a + x*b + c
+ax1.plot(x, y, c = "b", linewidth = 1)
+a, b, c = np.polyfit(df5["L*"], df2["Chl/cm2"], 2)
+x = np.linspace(min(df5["L*"]), max(df5["L*"]))
+y = x**2 *a + x*b + c
+ax1.plot(x, y, c = "r", linewidth = 1)
+
+ax2.scatter(df4["a*"], df1["Chl/cm2"], c = 'b', edgecolors = '#474746', linewidths = 0.7)
+ax2.scatter(df5["a*"], df2["Chl/cm2"], c = 'r', marker = '^', edgecolors = '#474746', linewidths = 0.7)
+a, b, c = np.polyfit(df4["a*"], df1["Chl/cm2"], 2)
+x = np.linspace(min(df4["a*"]), max(df4["a*"]))
+y = x**2 *a + x*b + c
+ax2.plot(x, y, c = "b", linewidth = 1)
+a, b, c = np.polyfit(df5["a*"], df2["Chl/cm2"], 2)
+x = np.linspace(min(df5["a*"]), max(df5["a*"]))
+y = x**2 *a + x*b + c
+ax2.plot(x, y, c = "r", linewidth = 1)
+
+ax3.scatter(df4["b*"], df1["Chl/cm2"], c = 'b', edgecolors = '#474746', linewidths = 0.7)
+ax3.scatter(df5["b*"], df2["Chl/cm2"], c = 'r', marker = '^', edgecolors = '#474746', linewidths = 0.7)
+a, b, c = np.polyfit(df4["b*"], df1["Chl/cm2"], 2)
+x = np.linspace(min(df4["b*"]), max(df4["b*"]))
+y = x**2 *a + x*b + c
+ax3.plot(x, y, c = "b", linewidth = 1)
+a, b, c = np.polyfit(df5["b*"], df2["Chl/cm2"], 2)
+x = np.linspace(min(df5["b*"]), max(df5["b*"]))
+y = x**2 *a + x*b + c
+ax3.plot(x, y, c = "r", linewidth = 1)
+
+ax4.scatter(df4["C*"], df1["Chl/cm2"], c = 'b', edgecolors = '#474746', linewidths = 0.7)
+ax4.scatter(df5["C*"], df2["Chl/cm2"], c = 'r', marker = '^', edgecolors = '#474746', linewidths = 0.7)
+a, b, c = np.polyfit(df4["C*"], df1["Chl/cm2"], 2)
+x = np.linspace(min(df4["C*"]), max(df4["C*"]))
+y = x**2 *a + x*b + c
+ax4.plot(x, y, c = "b", linewidth = 1)
+a, b, c = np.polyfit(df5["C*"], df2["Chl/cm2"], 2)
+x = np.linspace(min(df5["C*"]), max(df5["C*"]))
+y = x**2 *a + x*b + c
+ax4.plot(x, y, c = "r", linewidth = 1)
+
+ax5.scatter(df4["h"], df1["Chl/cm2"], c = 'b', edgecolors = '#474746', linewidths = 0.7)
+ax5.scatter(df5["h"], df2["Chl/cm2"], c = 'r', marker = '^', edgecolors = '#474746', linewidths = 0.7)
+a, b, c = np.polyfit(df4["h"], df1["Chl/cm2"], 2)
+x = np.linspace(min(df4["h"]), max(df4["h"]))
+y = x**2 *a + x*b + c
+ax5.plot(x, y, c = "b", linewidth = 1)
+a, b, c = np.polyfit(df5["h"], df2["Chl/cm2"], 2)
+x = np.linspace(min(df5["h"]), max(df5["h"]))
+y = x**2 *a + x*b + c
+ax5.plot(x, y, c = "r", linewidth = 1)
+
+ax1.set_ylabel('Chlorophyll per cm$^2$', fontsize = 16)
+ax1.set_xlabel('L*', fontsize = 14)
+ax2.set_xlabel('a*', fontsize = 14)
+ax3.set_xlabel('b*', fontsize = 14)
+ax4.set_xlabel('C*', fontsize = 14)
+ax5.set_xlabel('h', fontsize = 14)
+
+# plt.savefig("Total Chl against SR-CIELAB.png", dpi = 1200, bbox_inches='tight')
+
+#######
+
+# Total Chl A/cm2 against spectoradiometer-measured CIELAB parameters
+
+fig,(ax1, ax2, ax3, ax4, ax5) = plt.subplots(1, 5, figsize = (45, 8.5), sharey = True)
+fig.subplots_adjust(wspace=0.05)
+
+ax1.scatter(df4["L*"], df1["ChlA/cm2"], c = 'b', edgecolors = '#474746', linewidths = 0.7)
+ax1.scatter(df5["L*"], df2["ChlA/cm2"], marker = '^', c = 'r', edgecolors = '#474746', linewidths = 0.7)
+a, b, c = np.polyfit(df4["L*"], df1["ChlA/cm2"], 2)
+x = np.linspace(min(df4["L*"]), max(df4["L*"]))
+y = x**2 *a + x*b + c
+ax1.plot(x, y, c = "b", linewidth = 1)
+a, b, c = np.polyfit(df5["L*"], df2["ChlA/cm2"], 2)
+x = np.linspace(min(df5["L*"]), max(df5["L*"]))
+y = x**2 *a + x*b + c
+ax1.plot(x, y, c = "r", linewidth = 1)
+
+ax2.scatter(df4["a*"], df1["ChlA/cm2"], c = 'b', edgecolors = '#474746', linewidths = 0.7)
+ax2.scatter(df5["a*"], df2["ChlA/cm2"], c = 'r', marker = '^', edgecolors = '#474746', linewidths = 0.7)
+a, b, c = np.polyfit(df4["a*"], df1["ChlA/cm2"], 2)
+x = np.linspace(min(df4["a*"]), max(df4["a*"]))
+y = x**2 *a + x*b + c
+ax2.plot(x, y, c = "b", linewidth = 1)
+a, b, c = np.polyfit(df5["a*"], df2["ChlA/cm2"], 2)
+x = np.linspace(min(df5["a*"]), max(df5["a*"]))
+y = x**2 *a + x*b + c
+ax2.plot(x, y, c = "r", linewidth = 1)
+
+ax3.scatter(df4["b*"], df1["ChlA/cm2"], c = 'b', edgecolors = '#474746', linewidths = 0.7)
+ax3.scatter(df5["b*"], df2["ChlA/cm2"], c = 'r', marker = '^', edgecolors = '#474746', linewidths = 0.7)
+a, b, c = np.polyfit(df4["b*"], df1["ChlA/cm2"], 2)
+x = np.linspace(min(df4["b*"]), max(df4["b*"]))
+y = x**2 *a + x*b + c
+ax3.plot(x, y, c = "b", linewidth = 1)
+a, b, c = np.polyfit(df5["b*"], df2["ChlA/cm2"], 2)
+x = np.linspace(min(df5["b*"]), max(df5["b*"]))
+y = x**2 *a + x*b + c
+ax3.plot(x, y, c = "r", linewidth = 1)
+
+ax4.scatter(df4["C*"], df1["ChlA/cm2"], c = 'b', edgecolors = '#474746', linewidths = 0.7)
+ax4.scatter(df5["C*"], df2["ChlA/cm2"], c = 'r', marker = '^', edgecolors = '#474746', linewidths = 0.7)
+a, b, c = np.polyfit(df4["C*"], df1["ChlA/cm2"], 2)
+x = np.linspace(min(df4["C*"]), max(df4["C*"]))
+y = x**2 *a + x*b + c
+ax4.plot(x, y, c = "b", linewidth = 1)
+a, b, c = np.polyfit(df5["C*"], df2["ChlA/cm2"], 2)
+x = np.linspace(min(df5["C*"]), max(df5["C*"]))
+y = x**2 *a + x*b + c
+ax4.plot(x, y, c = "r", linewidth = 1)
+
+ax5.scatter(df4["h"], df1["ChlA/cm2"], c = 'b', edgecolors = '#474746', linewidths = 0.7)
+ax5.scatter(df5["h"], df2["ChlA/cm2"], c = 'r', marker = '^', edgecolors = '#474746', linewidths = 0.7)
+a, b, c = np.polyfit(df4["h"], df1["ChlA/cm2"], 2)
+x = np.linspace(min(df4["h"]), max(df4["h"]))
+y = x**2 *a + x*b + c
+ax5.plot(x, y, c = "b", linewidth = 1)
+a, b, c = np.polyfit(df5["h"], df2["ChlA/cm2"], 2)
+x = np.linspace(min(df5["h"]), max(df5["h"]))
+y = x**2 *a + x*b + c
+ax5.plot(x, y, c = "r", linewidth = 1)
+
+ax1.set_ylabel('Chlorophyll A per cm$^2$', fontsize = 16)
+ax1.set_xlabel('L*', fontsize = 14)
+ax2.set_xlabel('a*', fontsize = 14)
+ax3.set_xlabel('b*', fontsize = 14)
+ax4.set_xlabel('C*', fontsize = 14)
+ax5.set_xlabel('h', fontsize = 14)
+
+# plt.savefig("Chl A against SR-CIELAB.png", dpi = 600, bbox_inches='tight')
+
+#######
+
+# Total Chl B/cm2 against spectoradiometer-measured CIELAB parameters
+
+fig,(ax1, ax2, ax3, ax4, ax5) = plt.subplots(1, 5, figsize = (45, 8.5), sharey = True)
+fig.subplots_adjust(wspace=0.05)
+
+ax1.scatter(df4["L*"], df1["ChlB/cm2"], c = 'b', edgecolors = '#474746', linewidths = 0.7)
+ax1.scatter(df5["L*"], df2["ChlB/cm2"], marker = '^', c = 'r', edgecolors = '#474746', linewidths = 0.7)
+a, b, c = np.polyfit(df4["L*"], df1["ChlB/cm2"], 2)
+x = np.linspace(min(df4["L*"]), max(df4["L*"]))
+y = x**2 *a + x*b + c
+ax1.plot(x, y, c = "b", linewidth = 1)
+a, b, c = np.polyfit(df5["L*"], df2["ChlB/cm2"], 2)
+x = np.linspace(min(df5["L*"]), max(df5["L*"]))
+y = x**2 *a + x*b + c
+ax1.plot(x, y, c = "r", linewidth = 1)
+
+ax2.scatter(df4["a*"], df1["ChlB/cm2"], c = 'b', edgecolors = '#474746', linewidths = 0.7)
+ax2.scatter(df5["a*"], df2["ChlB/cm2"], c = 'r', marker = '^', edgecolors = '#474746', linewidths = 0.7)
+a, b, c = np.polyfit(df4["a*"], df1["ChlB/cm2"], 2)
+x = np.linspace(min(df4["a*"]), max(df4["a*"]))
+y = x**2 *a + x*b + c
+ax2.plot(x, y, c = "b", linewidth = 1)
+a, b, c = np.polyfit(df5["a*"], df2["ChlB/cm2"], 2)
+x = np.linspace(min(df5["a*"]), max(df5["a*"]))
+y = x**2 *a + x*b + c
+ax2.plot(x, y, c = "r", linewidth = 1)
+
+ax3.scatter(df4["b*"], df1["ChlB/cm2"], c = 'b', edgecolors = '#474746', linewidths = 0.7)
+ax3.scatter(df5["b*"], df2["ChlB/cm2"], c = 'r', marker = '^', edgecolors = '#474746', linewidths = 0.7)
+a, b, c = np.polyfit(df4["b*"], df1["ChlB/cm2"], 2)
+x = np.linspace(min(df4["b*"]), max(df4["b*"]))
+y = x**2 *a + x*b + c
+ax3.plot(x, y, c = "b", linewidth = 1)
+a, b, c = np.polyfit(df5["b*"], df2["ChlB/cm2"], 2)
+x = np.linspace(min(df5["b*"]), max(df5["b*"]))
+y = x**2 *a + x*b + c
+ax3.plot(x, y, c = "r", linewidth = 1)
+
+ax4.scatter(df4["C*"], df1["ChlB/cm2"], c = 'b', edgecolors = '#474746', linewidths = 0.7)
+ax4.scatter(df5["C*"], df2["ChlB/cm2"], c = 'r', marker = '^', edgecolors = '#474746', linewidths = 0.7)
+a, b, c = np.polyfit(df4["C*"], df1["ChlB/cm2"], 2)
+x = np.linspace(min(df4["C*"]), max(df4["C*"]))
+y = x**2 *a + x*b + c
+ax4.plot(x, y, c = "b", linewidth = 1)
+a, b, c = np.polyfit(df5["C*"], df2["ChlB/cm2"], 2)
+x = np.linspace(min(df5["C*"]), max(df5["C*"]))
+y = x**2 *a + x*b + c
+ax4.plot(x, y, c = "r", linewidth = 1)
+
+ax5.scatter(df4["h"], df1["ChlB/cm2"], c = 'b', edgecolors = '#474746', linewidths = 0.7)
+ax5.scatter(df5["h"], df2["ChlB/cm2"], c = 'r', marker = '^', edgecolors = '#474746', linewidths = 0.7)
+a, b, c = np.polyfit(df4["h"], df1["ChlB/cm2"], 2)
+x = np.linspace(min(df4["h"]), max(df4["h"]))
+y = x**2 *a + x*b + c
+ax5.plot(x, y, c = "b", linewidth = 1)
+a, b, c = np.polyfit(df5["h"], df2["ChlB/cm2"], 2)
+x = np.linspace(min(df5["h"]), max(df5["h"]))
+y = x**2 *a + x*b + c
+ax5.plot(x, y, c = "r", linewidth = 1)
+
+ax1.set_ylabel('Chlorophyll B per cm$^2$', fontsize = 16)
+ax1.set_xlabel('L*', fontsize = 14)
+ax2.set_xlabel('a*', fontsize = 14)
+ax3.set_xlabel('b*', fontsize = 14)
+ax4.set_xlabel('C*', fontsize = 14)
+ax5.set_xlabel('h', fontsize = 14)
+
+# plt.savefig("Chl B against SR-CIELAB.png", dpi = 600, bbox_inches='tight')
+
+#######
+
+# Total Chl/cm2 against ColourWorker-measured CIELAB parameters
+
+fig,(ax1, ax2, ax3, ax4, ax5) = plt.subplots(1, 5, figsize = (45, 8.5), sharey = True) # creating graph frame
+fig.subplots_adjust(wspace=0.05)
+
+ax1.scatter(df6["L*"], df1["Chl/cm2"], c = 'b', edgecolors = '#474746', linewidths = 0.7) # plotting WO samples
+ax1.scatter(df7["L*"], df2["Chl/cm2"], marker = '^', c = 'r', edgecolors = '#474746', linewidths = 0.7) # plotting N samples in a different colour
+a, b, c = np.polyfit(df6["L*"], df1["Chl/cm2"], 2) # creating trendline
+x = np.linspace(min(df6["L*"]), max(df6["L*"]))
+y = x**2 *a + x*b + c
+ax1.plot(x, y, c = "b", linewidth = 1)
+a, b, c = np.polyfit(df7["L*"], df2["Chl/cm2"], 2)
+x = np.linspace(min(df7["L*"]), max(df7["L*"]))
+y = x**2 *a + x*b + c
+ax1.plot(x, y, c = "r", linewidth = 1)
+
+ax2.scatter(df6["a*"], df1["Chl/cm2"], c = 'b', edgecolors = '#474746', linewidths = 0.7)
+ax2.scatter(df7["a*"], df2["Chl/cm2"], c = 'r', marker = '^', edgecolors = '#474746', linewidths = 0.7)
+a, b, c = np.polyfit(df6["a*"], df1["Chl/cm2"], 2)
+x = np.linspace(min(df6["a*"]), max(df6["a*"]))
+y = x**2 *a + x*b + c
+ax2.plot(x, y, c = "b", linewidth = 1)
+a, b, c = np.polyfit(df7["a*"], df2["Chl/cm2"], 2)
+x = np.linspace(min(df7["a*"]), max(df7["a*"]))
+y = x**2 *a + x*b + c
+ax2.plot(x, y, c = "r", linewidth = 1)
+
+ax3.scatter(df6["b*"], df1["Chl/cm2"], c = 'b', edgecolors = '#474746', linewidths = 0.7)
+ax3.scatter(df7["b*"], df2["Chl/cm2"], c = 'r', marker = '^', edgecolors = '#474746', linewidths = 0.7)
+a, b, c = np.polyfit(df6["b*"], df1["Chl/cm2"], 2)
+x = np.linspace(min(df6["b*"]), max(df6["b*"]))
+y = x**2 *a + x*b + c
+ax3.plot(x, y, c = "b", linewidth = 1)
+a, b, c = np.polyfit(df7["b*"], df2["Chl/cm2"], 2)
+x = np.linspace(min(df7["b*"]), max(df7["b*"]))
+y = x**2 *a + x*b + c
+ax3.plot(x, y, c = "r", linewidth = 1)
+
+ax4.scatter(df6["C*"], df1["Chl/cm2"], c = 'b', edgecolors = '#474746', linewidths = 0.7)
+ax4.scatter(df7["C*"], df2["Chl/cm2"], c = 'r', marker = '^', edgecolors = '#474746', linewidths = 0.7)
+a, b, c = np.polyfit(df6["C*"], df1["Chl/cm2"], 2)
+x = np.linspace(min(df6["C*"]), max(df6["C*"]))
+y = x**2 *a + x*b + c
+ax4.plot(x, y, c = "b", linewidth = 1)
+a, b, c = np.polyfit(df7["C*"], df2["Chl/cm2"], 2)
+x = np.linspace(min(df7["C*"]), max(df7["C*"]))
+y = x**2 *a + x*b + c
+ax4.plot(x, y, c = "r", linewidth = 1)
+
+ax5.scatter(df6["h"], df1["Chl/cm2"], c = 'b', edgecolors = '#474746', linewidths = 0.7)
+ax5.scatter(df7["h"], df2["Chl/cm2"], c = 'r', marker = '^', edgecolors = '#474746', linewidths = 0.7)
+a, b, c = np.polyfit(df6["h"], df1["Chl/cm2"], 2)
+x = np.linspace(min(df6["h"]), max(df6["h"]))
+y = x**2 *a + x*b + c
+ax5.plot(x, y, c = "b", linewidth = 1)
+a, b, c = np.polyfit(df7["h"], df2["Chl/cm2"], 2)
+x = np.linspace(min(df7["h"]), max(df7["h"]))
+y = x**2 *a + x*b + c
+ax5.plot(x, y, c = "r", linewidth = 1)
+
+ax1.set_ylabel('Chlorophyll per cm$^2$', fontsize = 16)
+ax1.set_xlabel('L*', fontsize = 14)
+ax2.set_xlabel('a*', fontsize = 14)
+ax3.set_xlabel('b*', fontsize = 14)
+ax4.set_xlabel('C*', fontsize = 14)
+ax5.set_xlabel('h', fontsize = 14)
+
+# plt.savefig("Total Chl against CW-CIELAB.png", dpi = 1200, bbox_inches='tight')
+
+#######
+
+# Total Chl A/cm2 against ColourWorker-measured CIELAB parameters
+
+fig,(ax1, ax2, ax3, ax4, ax5) = plt.subplots(1, 5, figsize = (45, 8.5), sharey = True)
+fig.subplots_adjust(wspace=0.05)
+
+ax1.scatter(df6["L*"], df1["ChlA/cm2"], c = 'b', edgecolors = '#474746', linewidths = 0.7)
+ax1.scatter(df7["L*"], df2["ChlA/cm2"], marker = '^', c = 'r', edgecolors = '#474746', linewidths = 0.7)
+a, b, c = np.polyfit(df6["L*"], df1["ChlA/cm2"], 2)
+x = np.linspace(min(df6["L*"]), max(df6["L*"]))
+y = x**2 *a + x*b + c
+ax1.plot(x, y, c = "b", linewidth = 1)
+a, b, c = np.polyfit(df7["L*"], df2["ChlA/cm2"], 2)
+x = np.linspace(min(df7["L*"]), max(df7["L*"]))
+y = x**2 *a + x*b + c
+ax1.plot(x, y, c = "r", linewidth = 1)
+
+ax2.scatter(df6["a*"], df1["ChlA/cm2"], c = 'b', edgecolors = '#474746', linewidths = 0.7)
+ax2.scatter(df7["a*"], df2["ChlA/cm2"], c = 'r', marker = '^', edgecolors = '#474746', linewidths = 0.7)
+a, b, c = np.polyfit(df6["a*"], df1["ChlA/cm2"], 2)
+x = np.linspace(min(df6["a*"]), max(df6["a*"]))
+y = x**2 *a + x*b + c
+ax2.plot(x, y, c = "b", linewidth = 1)
+a, b, c = np.polyfit(df7["a*"], df2["ChlA/cm2"], 2)
+x = np.linspace(min(df7["a*"]), max(df7["a*"]))
+y = x**2 *a + x*b + c
+ax2.plot(x, y, c = "r", linewidth = 1)
+
+ax3.scatter(df6["b*"], df1["ChlA/cm2"], c = 'b', edgecolors = '#474746', linewidths = 0.7)
+ax3.scatter(df7["b*"], df2["ChlA/cm2"], c = 'r', marker = '^', edgecolors = '#474746', linewidths = 0.7)
+a, b, c = np.polyfit(df6["b*"], df1["ChlA/cm2"], 2)
+x = np.linspace(min(df6["b*"]), max(df6["b*"]))
+y = x**2 *a + x*b + c
+ax3.plot(x, y, c = "b", linewidth = 1)
+a, b, c = np.polyfit(df7["b*"], df2["ChlA/cm2"], 2)
+x = np.linspace(min(df7["b*"]), max(df7["b*"]))
+y = x**2 *a + x*b + c
+ax3.plot(x, y, c = "r", linewidth = 1)
+
+ax4.scatter(df6["C*"], df1["ChlA/cm2"], c = 'b', edgecolors = '#474746', linewidths = 0.7)
+ax4.scatter(df7["C*"], df2["ChlA/cm2"], c = 'r', marker = '^', edgecolors = '#474746', linewidths = 0.7)
+a, b, c = np.polyfit(df6["C*"], df1["ChlA/cm2"], 2)
+x = np.linspace(min(df6["C*"]), max(df6["C*"]))
+y = x**2 *a + x*b + c
+ax4.plot(x, y, c = "b", linewidth = 1)
+a, b, c = np.polyfit(df7["C*"], df2["ChlA/cm2"], 2)
+x = np.linspace(min(df7["C*"]), max(df7["C*"]))
+y = x**2 *a + x*b + c
+ax4.plot(x, y, c = "r", linewidth = 1)
+
+ax5.scatter(df6["h"], df1["ChlA/cm2"], c = 'b', edgecolors = '#474746', linewidths = 0.7)
+ax5.scatter(df7["h"], df2["ChlA/cm2"], c = 'r', marker = '^', edgecolors = '#474746', linewidths = 0.7)
+a, b, c = np.polyfit(df6["h"], df1["ChlA/cm2"], 2)
+x = np.linspace(min(df6["h"]), max(df6["h"]))
+y = x**2 *a + x*b + c
+ax5.plot(x, y, c = "b", linewidth = 1)
+a, b, c = np.polyfit(df7["h"], df2["ChlA/cm2"], 2)
+x = np.linspace(min(df7["h"]), max(df7["h"]))
+y = x**2 *a + x*b + c
+ax5.plot(x, y, c = "r", linewidth = 1)
+
+ax1.set_ylabel('Chlorophyll A per cm$^2$', fontsize = 16)
+ax1.set_xlabel('L*', fontsize = 14)
+ax2.set_xlabel('a*', fontsize = 14)
+ax3.set_xlabel('b*', fontsize = 14)
+ax4.set_xlabel('C*', fontsize = 14)
+ax5.set_xlabel('h', fontsize = 14)
+
+# plt.savefig("Chl A against CW-CIELAB.png", dpi = 600, bbox_inches='tight')
+
+#######
+
+# Total Chl B/cm2 against ColourWorker-measured CIELAB parameters
+
+fig,(ax1, ax2, ax3, ax4, ax5) = plt.subplots(1, 5, figsize = (45, 8.5), sharey = True)
+fig.subplots_adjust(wspace=0.05)
+
+ax1.scatter(df6["L*"], df1["ChlB/cm2"], c = 'b', edgecolors = '#474746', linewidths = 0.7)
+ax1.scatter(df7["L*"], df2["ChlB/cm2"], marker = '^', c = 'r', edgecolors = '#474746', linewidths = 0.7)
+a, b, c = np.polyfit(df6["L*"], df1["ChlB/cm2"], 2)
+x = np.linspace(min(df6["L*"]), max(df6["L*"]))
+y = x**2 *a + x*b + c
+ax1.plot(x, y, c = "b", linewidth = 1)
+a, b, c = np.polyfit(df7["L*"], df2["ChlB/cm2"], 2)
+x = np.linspace(min(df7["L*"]), max(df7["L*"]))
+y = x**2 *a + x*b + c
+ax1.plot(x, y, c = "r", linewidth = 1)
+
+ax2.scatter(df6["a*"], df1["ChlB/cm2"], c = 'b', edgecolors = '#474746', linewidths = 0.7)
+ax2.scatter(df7["a*"], df2["ChlB/cm2"], c = 'r', marker = '^', edgecolors = '#474746', linewidths = 0.7)
+a, b, c = np.polyfit(df6["a*"], df1["ChlB/cm2"], 2)
+x = np.linspace(min(df6["a*"]), max(df6["a*"]))
+y = x**2 *a + x*b + c
+ax2.plot(x, y, c = "b", linewidth = 1)
+a, b, c = np.polyfit(df7["a*"], df2["ChlB/cm2"], 2)
+x = np.linspace(min(df7["a*"]), max(df7["a*"]))
+y = x**2 *a + x*b + c
+ax2.plot(x, y, c = "r", linewidth = 1)
+
+ax3.scatter(df6["b*"], df1["ChlB/cm2"], c = 'b', edgecolors = '#474746', linewidths = 0.7)
+ax3.scatter(df7["b*"], df2["ChlB/cm2"], c = 'r', marker = '^', edgecolors = '#474746', linewidths = 0.7)
+a, b, c = np.polyfit(df6["b*"], df1["ChlB/cm2"], 2)
+x = np.linspace(min(df6["b*"]), max(df6["b*"]))
+y = x**2 *a + x*b + c
+ax3.plot(x, y, c = "b", linewidth = 1)
+a, b, c = np.polyfit(df7["b*"], df2["ChlB/cm2"], 2)
+x = np.linspace(min(df7["b*"]), max(df7["b*"]))
+y = x**2 *a + x*b + c
+ax3.plot(x, y, c = "r", linewidth = 1)
+
+ax4.scatter(df6["C*"], df1["ChlB/cm2"], c = 'b', edgecolors = '#474746', linewidths = 0.7)
+ax4.scatter(df7["C*"], df2["ChlB/cm2"], c = 'r', marker = '^', edgecolors = '#474746', linewidths = 0.7)
+a, b, c = np.polyfit(df6["C*"], df1["ChlB/cm2"], 2)
+x = np.linspace(min(df6["C*"]), max(df6["C*"]))
+y = x**2 *a + x*b + c
+ax4.plot(x, y, c = "b", linewidth = 1)
+a, b, c = np.polyfit(df7["C*"], df2["ChlB/cm2"], 2)
+x = np.linspace(min(df7["C*"]), max(df7["C*"]))
+y = x**2 *a + x*b + c
+ax4.plot(x, y, c = "r", linewidth = 1)
+
+ax5.scatter(df6["h"], df1["ChlB/cm2"], c = 'b', edgecolors = '#474746', linewidths = 0.7)
+ax5.scatter(df7["h"], df2["ChlB/cm2"], c = 'r', marker = '^', edgecolors = '#474746', linewidths = 0.7)
+a, b, c = np.polyfit(df6["h"], df1["ChlB/cm2"], 2)
+x = np.linspace(min(df6["h"]), max(df6["h"]))
+y = x**2 *a + x*b + c
+ax5.plot(x, y, c = "b", linewidth = 1)
+a, b, c = np.polyfit(df7["h"], df2["ChlB/cm2"], 2)
+x = np.linspace(min(df7["h"]), max(df7["h"]))
+y = x**2 *a + x*b + c
+ax5.plot(x, y, c = "r", linewidth = 1)
+
+ax1.set_ylabel('Chlorophyll B per cm$^2$', fontsize = 16)
+ax1.set_xlabel('L*', fontsize = 14)
+ax2.set_xlabel('a*', fontsize = 14)
+ax3.set_xlabel('b*', fontsize = 14)
+ax4.set_xlabel('C*', fontsize = 14)
+ax5.set_xlabel('h', fontsize = 14)
+
+plt.show()
+
+# plt.savefig("Chl B against CW-CIELAB.png", dpi = 600, bbox_inches='tight')
