@@ -1,0 +1,32 @@
+import numpy as np
+import matplotlib.pyplot as plt
+import pandas as pd
+
+#########
+
+df1 = pd.read_excel("LAB.xlsx", sheet_name = "CW") # loading in ColourWorker LAB dataset
+df2 = pd.read_excel("LAB.xlsx", sheet_name = "SR") # loading in spectroradiometer LAB dataset
+
+#########
+
+cmap = plt.get_cmap('Greens', 5) # getting green colourmap for plotting
+plt.figure()
+plt.scatter(df1["a*"], df1["b*"], cmap = cmap, c = df1["SPAD"], edgecolors = '#474746', linewidths = 0.7) # plotting ColourWorker-measured b* against a*
+plt.title("b* Against a*: ColourWorker")
+plt.xlabel("a*")
+plt.ylabel("b*")
+clb = plt.colorbar()
+clb.ax.set_title("SPAD", fontsize = 10)
+# plt.savefig("CW a-b plot.png", dpi = 600, bbox_inches='tight')
+plt.show()
+
+plt.figure()
+plt.scatter(df2["a*"], df2["b*"], cmap = cmap, c = df2["SPAD"], edgecolors = '#474746', linewidths = 0.7) # plotting SR-measured b* against a*
+plt.title("b* Against a*: Specradiometer")
+plt.xlabel("a*")
+plt.ylabel("b*")
+clb = plt.colorbar()
+clb.ax.set_title("SPAD", fontsize = 10)
+clb.ax.set_title("SPAD", fontsize = 10)
+# plt.savefig("SR a-b plot.png", dpi = 600, bbox_inches='tight')
+plt.show()
