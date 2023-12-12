@@ -1,0 +1,223 @@
+import pandas as pd
+import matplotlib.pyplot as plt
+import numpy as np
+
+# loading in datasets
+df1 = pd.read_excel("chlspad.xlsx", sheet_name = "SPAD_WO")
+df2 = pd.read_excel("chlspad.xlsx", sheet_name = "SPAD_N")
+df3 = pd.read_excel("chlspad.xlsx", sheet_name = "Chl_WO")
+df4 = pd.read_excel("chlspad.xlsx", sheet_name = "Chl_N")
+
+# creating reference 1 = 1 line
+x = np.arange(-200,200,1)
+
+#########
+
+# measured vs estimated SPAD - all (WO + N plants)
+
+plt.figure()
+for i in range(len(df1["SPAD"])):
+            plt.errorbar(df1["SPAD"], df1["SPAD_e"], markersize = 5, markerfacecolor = '#3c569e', ecolor = "#3c569e", elinewidth = 1, zorder = 999, markeredgewidth = 0, label = "Water only", xerr = df1["SPAD stdev"], yerr = df1["SPAD_e stdev"], fmt = "o")
+            plt.errorbar(df2["SPAD"], df2["SPAD_e"], markersize = 6, markerfacecolor = '#d12a2a', ecolor = "#d12a2a", elinewidth = 1, zorder = 999, markeredgewidth = 0, label = "Nitrogen", xerr = df2["SPAD stdev"], yerr = df2["SPAD_e stdev"], fmt = "^")
+####
+x1 = max(df1["SPAD"])
+x2 = max(df2["SPAD"])
+relative = max(x1,x2) # using maximum values to create reference line
+####
+# creating shaded error regions surrounding 1 = 1 reference line
+plt.plot(x, (x-(0.05*relative)) , color = "#454545", lw = 0.2, zorder = 4) # 5%
+plt.plot(x, (x+(0.05*relative)) , color = "#454545", lw = 0.2, zorder = 4) # 5%
+plt.plot(x, (x-(0.1*relative)) , color = "#575757", lw = 0.2, zorder = 3) # 10%
+plt.plot(x, (x+(0.1*relative)) , color = "#575757", lw = 0.2, zorder = 3) # 10%
+plt.plot(x, (x-(0.15*relative)) , color = "#575757", lw = 0.2, zorder = 2) # 15%
+plt.plot(x, (x+(0.15*relative)) , color = "#575757", lw = 0.2, zorder = 2) # 15%
+plt.plot(x, x , linestyle = "--", zorder = 999, color = "#575757")
+
+plt.fill_between(x, (x-(0.05*relative)), (x+(0.05*relative)), facecolor = "#a9a9a9", zorder = 1, alpha = 0.9, label = "5$\%$ error")
+plt.fill_between(x, (x-(0.1*relative)), (x+(0.1*relative)), facecolor = "#c2c2c2", zorder = 2, alpha = 0.7, label = "10$\%$ error")
+plt.fill_between(x, (x-(0.15*relative)), (x+(0.15*relative)), facecolor = "#e8e8e8", zorder = 3, alpha = 0.5, label = "15$\%$ error")
+#
+handles, labels_d = plt.gca().get_legend_handles_labels() # creating legend
+by_label = dict(zip(labels_d, handles))
+plt.legend(by_label.values(), by_label.keys(), fontsize = 8, loc = 2)
+#
+plt.xlabel("Measured SPAD")
+plt.ylabel("Estimated SPAD")
+plt.title("Esimated SPAD Against Measured SPAD: All")
+plt.xlim(0,50)
+plt.ylim(0,50)
+# plt.savefig("SPAD estimate error for all.png", dpi = 1200, bbox_inches='tight')
+plt.show()
+
+#########
+
+# measured vs estimated SPAD - N condition plants only
+
+plt.figure()
+for i in range(len(df2["SPAD"])):
+            plt.errorbar(df2["SPAD"], df2["SPAD_e"], markersize = 6, markerfacecolor = '#d12a2a', ecolor = "#d12a2a", elinewidth = 1, zorder = 999, markeredgewidth = 0, xerr = df2["SPAD stdev"], yerr = df2["SPAD_e stdev"], fmt = "^")
+####
+relative = max(df2["SPAD"])
+####
+plt.plot(x, (x-(0.05*relative)) , color = "#454545", lw = 0.2, zorder = 4)
+plt.plot(x, (x+(0.05*relative)) , color = "#454545", lw = 0.2, zorder = 4)
+plt.plot(x, (x-(0.1*relative)) , color = "#575757", lw = 0.2, zorder = 3)
+plt.plot(x, (x+(0.1*relative)) , color = "#575757", lw = 0.2, zorder = 3)
+plt.plot(x, (x-(0.15*relative)) , color = "#575757", lw = 0.2, zorder = 2)
+plt.plot(x, (x+(0.15*relative)) , color = "#575757", lw = 0.2, zorder = 2)
+plt.plot(x, x , linestyle = "--", zorder = 999, color = "#575757")
+
+plt.fill_between(x, (x-(0.05*relative)), (x+(0.05*relative)), facecolor = "#a9a9a9", zorder = 1, alpha = 0.9, label = "5$\%$ error")
+plt.fill_between(x, (x-(0.1*relative)), (x+(0.1*relative)), facecolor = "#c2c2c2", zorder = 2, alpha = 0.7, label = "10$\%$ error")
+plt.fill_between(x, (x-(0.15*relative)), (x+(0.15*relative)), facecolor = "#e8e8e8", zorder = 3, alpha = 0.5, label = "15$\%$ error")
+#
+handles, labels_d = plt.gca().get_legend_handles_labels()
+by_label = dict(zip(labels_d, handles))
+plt.legend(by_label.values(), by_label.keys(), fontsize = 8, loc = 2)
+#
+plt.xlabel("Measured SPAD")
+plt.ylabel("Estimated SPAD")
+plt.title("Esimated SPAD Against Measured SPAD: Nitrogen")
+plt.xlim(20,50)
+plt.ylim(20,50)
+# plt.savefig("SPAD estimate error for N.png", dpi = 1200, bbox_inches='tight')
+plt.show()
+
+#########
+
+# measured vs estimated SPAD - WO condition plants only
+
+plt.figure()
+for i in range(len(df1["SPAD"])):
+            plt.errorbar(df1["SPAD"], df1["SPAD_e"], markersize = 5, markerfacecolor = '#3c569e', ecolor = "#3c569e", elinewidth = 1, zorder = 999, markeredgewidth = 0, xerr = df1["SPAD stdev"], yerr = df1["SPAD_e stdev"], fmt = "o")
+####
+relative = max(df1["SPAD"])
+####
+plt.plot(x, (x-(0.05*relative)) , color = "#454545", lw = 0.2, zorder = 4)
+plt.plot(x, (x+(0.05*relative)) , color = "#454545", lw = 0.2, zorder = 4)
+plt.plot(x, (x-(0.1*relative)) , color = "#575757", lw = 0.2, zorder = 3)
+plt.plot(x, (x+(0.1*relative)) , color = "#575757", lw = 0.2, zorder = 3)
+plt.plot(x, (x-(0.15*relative)) , color = "#575757", lw = 0.2, zorder = 2)
+plt.plot(x, (x+(0.15*relative)) , color = "#575757", lw = 0.2, zorder = 2)
+plt.plot(x, x , linestyle = "--", zorder = 999, color = "#575757")
+
+plt.fill_between(x, (x-(0.05*relative)), (x+(0.05*relative)), facecolor = "#a9a9a9", zorder = 1, alpha = 0.9, label = "5$\%$ error")
+plt.fill_between(x, (x-(0.1*relative)), (x+(0.1*relative)), facecolor = "#c2c2c2", zorder = 2, alpha = 0.7, label = "10$\%$ error")
+plt.fill_between(x, (x-(0.15*relative)), (x+(0.15*relative)), facecolor = "#e8e8e8", zorder = 3, alpha = 0.5, label = "15$\%$ error")
+#
+handles, labels_d = plt.gca().get_legend_handles_labels()
+by_label = dict(zip(labels_d, handles))
+plt.legend(by_label.values(), by_label.keys(), fontsize = 8, loc = 2)
+#
+plt.xlabel("Measured SPAD")
+plt.ylabel("Estimated SPAD")
+plt.title("Esimated SPAD Against Measured SPAD: Water Only")
+plt.xlim(10,50)
+plt.ylim(10,50)
+# plt.savefig("SPAD estimate error for WO.png", dpi = 1200, bbox_inches='tight')
+plt.show()
+
+#########
+
+# measured vs estimated Chl - all (WO + N plants)
+
+plt.figure()
+for i in range(len(df3["Chl_e"])):
+            plt.errorbar(df3["Chl/cm2"], df3["Chl_e"], markersize = 5, markerfacecolor = '#3c569e', ecolor = "#3c569e", elinewidth = 1, zorder = 999, markeredgewidth = 0, label = "Water only", yerr = df3["Chl_e stdev"], fmt = "o")
+            plt.errorbar(df4["Chl/cm2"], df4["Chl_e"], markersize = 6, markerfacecolor = '#d12a2a', ecolor = "#d12a2a", elinewidth = 1, zorder = 999, markeredgewidth = 0, label = "Nitrogen", yerr = df4["Chl_e stdev"], fmt = "^")
+####
+x1 = max(df3["Chl/cm2"])
+x2 = max(df4["Chl/cm2"])
+relative = max(x1,x2)
+####
+plt.plot(x, (x-(0.05*relative)) , color = "#454545", lw = 0.2, zorder = 4)
+plt.plot(x, (x+(0.05*relative)) , color = "#454545", lw = 0.2, zorder = 4)
+plt.plot(x, (x-(0.1*relative)) , color = "#575757", lw = 0.2, zorder = 3)
+plt.plot(x, (x+(0.1*relative)) , color = "#575757", lw = 0.2, zorder = 3)
+plt.plot(x, (x-(0.15*relative)) , color = "#575757", lw = 0.2, zorder = 2)
+plt.plot(x, (x+(0.15*relative)) , color = "#575757", lw = 0.2, zorder = 2)
+plt.plot(x, x , linestyle = "--", zorder = 999, color = "#575757")
+
+plt.fill_between(x, (x-(0.05*relative)), (x+(0.05*relative)), facecolor = "#a9a9a9", zorder = 1, alpha = 0.9, label = "5$\%$ error")
+plt.fill_between(x, (x-(0.1*relative)), (x+(0.1*relative)), facecolor = "#c2c2c2", zorder = 2, alpha = 0.7, label = "10$\%$ error")
+plt.fill_between(x, (x-(0.15*relative)), (x+(0.15*relative)), facecolor = "#e8e8e8", zorder = 3, alpha = 0.5, label = "15$\%$ error")
+#
+handles, labels_d = plt.gca().get_legend_handles_labels()
+by_label = dict(zip(labels_d, handles))
+plt.legend(by_label.values(), by_label.keys(), fontsize = 8, loc = 2)
+#
+plt.xlabel("Measured Chl/cm$^2$")
+plt.ylabel("Estimated Chl/cm$^2$")
+plt.title("Estimated Chlorophyll Against Measured Chlorophyll: All")
+plt.xlim(1,15)
+plt.ylim(1,15)
+# plt.savefig("Chl estimate error for all.png", dpi = 1200, bbox_inches='tight')
+plt.show()
+
+#########
+
+# measured vs estimated Chl - N condition plants only
+
+plt.figure()
+for i in range(len(df4["Chl_e"])):
+            plt.errorbar(df4["Chl/cm2"], df4["Chl_e"], markersize = 6, markerfacecolor = '#d12a2a', ecolor = "#d12a2a", elinewidth = 1, zorder = 999, markeredgewidth = 0, label = "Nitrogen", yerr = df4["Chl_e stdev"], fmt = "^")
+####
+relative = max(df4["Chl/cm2"])
+####
+plt.plot(x, (x-(0.05*relative)) , color = "#454545", lw = 0.2, zorder = 4)
+plt.plot(x, (x+(0.05*relative)) , color = "#454545", lw = 0.2, zorder = 4)
+plt.plot(x, (x-(0.1*relative)) , color = "#575757", lw = 0.2, zorder = 3)
+plt.plot(x, (x+(0.1*relative)) , color = "#575757", lw = 0.2, zorder = 3)
+plt.plot(x, (x-(0.15*relative)) , color = "#575757", lw = 0.2, zorder = 2)
+plt.plot(x, (x+(0.15*relative)) , color = "#575757", lw = 0.2, zorder = 2)
+plt.plot(x, x , linestyle = "--", zorder = 999, color = "#575757")
+
+plt.fill_between(x, (x-(0.05*relative)), (x+(0.05*relative)), facecolor = "#a9a9a9", zorder = 1, alpha = 0.9, label = "5$\%$ error")
+plt.fill_between(x, (x-(0.1*relative)), (x+(0.1*relative)), facecolor = "#c2c2c2", zorder = 2, alpha = 0.7, label = "10$\%$ error")
+plt.fill_between(x, (x-(0.15*relative)), (x+(0.15*relative)), facecolor = "#e8e8e8", zorder = 3, alpha = 0.5, label = "15$\%$ error")
+#
+handles, labels_d = plt.gca().get_legend_handles_labels()
+by_label = dict(zip(labels_d, handles))
+plt.legend(by_label.values(), by_label.keys(), fontsize = 8, loc = 2)
+#
+plt.xlabel("Measured Chl/cm$^2$")
+plt.ylabel("Estimated Chl/cm$^2$")
+plt.title("Estimated Chlorophyll Against Measured Chlorophyll: N")
+plt.xlim(0,14)
+plt.ylim(0,12)
+# plt.savefig("Chl estimate error for N.png", dpi = 1200, bbox_inches='tight')
+plt.show()
+
+#########
+
+# measured vs estimated Chl - WO condition plants only
+
+plt.figure()
+for i in range(len(df3["Chl_e"])):
+            plt.errorbar(df3["Chl/cm2"], df3["Chl_e"], markersize = 5, markerfacecolor = '#3c569e', ecolor = "#3c569e", elinewidth = 1, zorder = 999, markeredgewidth = 0, label = "Water only", yerr = df3["Chl_e stdev"], fmt = "o")
+####
+relative = max(df3["Chl/cm2"])
+####
+plt.plot(x, (x-(0.05*relative)) , color = "#454545", lw = 0.2, zorder = 4)
+plt.plot(x, (x+(0.05*relative)) , color = "#454545", lw = 0.2, zorder = 4)
+plt.plot(x, (x-(0.1*relative)) , color = "#575757", lw = 0.2, zorder = 3)
+plt.plot(x, (x+(0.1*relative)) , color = "#575757", lw = 0.2, zorder = 3)
+plt.plot(x, (x-(0.15*relative)) , color = "#575757", lw = 0.2, zorder = 2)
+plt.plot(x, (x+(0.15*relative)) , color = "#575757", lw = 0.2, zorder = 2)
+plt.plot(x, x , linestyle = "--", zorder = 999, color = "#575757")
+
+plt.fill_between(x, (x-(0.05*relative)), (x+(0.05*relative)), facecolor = "#a9a9a9", zorder = 1, alpha = 0.9, label = "5$\%$ error")
+plt.fill_between(x, (x-(0.1*relative)), (x+(0.1*relative)), facecolor = "#c2c2c2", zorder = 2, alpha = 0.7, label = "10$\%$ error")
+plt.fill_between(x, (x-(0.15*relative)), (x+(0.15*relative)), facecolor = "#e8e8e8", zorder = 3, alpha = 0.5, label = "15$\%$ error")
+#
+handles, labels_d = plt.gca().get_legend_handles_labels()
+by_label = dict(zip(labels_d, handles))
+plt.legend(by_label.values(), by_label.keys(), fontsize = 8, loc = 2)
+#
+plt.xlabel("Measured Chl/cm$^2$")
+plt.ylabel("Estimated Chl/cm$^2$")
+plt.title("Estimated Chlorophyll Against Measured Chlorophyll: WO")
+plt.xlim(0,12)
+plt.ylim(0,12)
+# plt.savefig("Chl estimate error for WO.png", dpi = 1200, bbox_inches='tight')
+plt.show()
