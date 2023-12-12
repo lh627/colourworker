@@ -1,0 +1,350 @@
+import matplotlib.pyplot as plt
+import numpy as np
+import pandas as pd
+from colormath.color_objects import LabColor, sRGBColor
+from colormath.color_conversions import convert_color
+
+df1 = pd.read_excel("LAB.xlsx", sheet_name = "CW SPADordered") # loading in dataset: CW-LAB for each sample, ordered by SPAD value
+df2 = pd.read_excel("chlspad.xlsx", sheet_name = "SPADordered") # loading in dataset: chlorophyll (where applicable) + SPAD for each sample, ordered by SPAD value
+leafname = df1["Leaf"]
+l = df1["L*"]
+lstdev = df1["L stdev"]
+a = df1["a*"]
+astdev = df1["a stdev"]
+b = df1["b*"]
+bstdev = df1["b stdev"]
+c = df1["C*"]
+cstdev = df1["C stdev"]
+h = df1["h"]
+hstdev = df1["h stdev"]
+spad = df1["SPAD"]
+stdev = df1["stdev"]
+spad_e = df2["SPAD_e"]
+
+##########
+
+lab = []
+for i in range(len(a)):
+    lab.append((l[i], a[i], b[i]))
+
+##########
+
+spad1, spad2, spad3, spad4, spad5, spad6, spad7 = [], [], [] ,[] ,[] ,[] ,[]
+stdev1, stdev2, stdev3, stdev4, stdev5, stdev6, stdev7 = [], [], [] ,[] ,[] ,[] ,[]
+spad_e1, spad_e2, spad_e3, spad_e4, spad_e5, spad_e6, spad_e7 = [], [], [] ,[] ,[] ,[] ,[]
+spad_estdev1, spad_estdev2, spad_estdev3, spad_estdev4, spad_estdev5, spad_estdev6, spad_estdev7 = [], [], [] ,[] ,[] ,[] ,[]
+lab1, lab2, lab3, lab4, lab5, lab6, lab7 = [], [], [], [], [], [], []
+label1, label2, label3, label4, label5, label6, label7 = [], [], [], [], [], [], []
+c1, c2, c3, c4, c5, c6, c7 = [],[],[],[],[],[],[]
+cstdev1, cstdev2, cstdev3, cstdev4, cstdev5, cstdev6, cstdev7 = [],[],[],[],[],[],[]
+a1, a2, a3, a4, a5, a6, a7 = [],[],[],[],[],[],[]
+astdev1, astdev2, astdev3, astdev4, astdev5, astdev6, astdev7 = [],[],[],[],[],[],[]
+b1, b2, b3, b4, b5, b6, b7 = [],[],[],[],[],[],[]
+bstdev1, bstdev2, bstdev3, bstdev4, bstdev5, bstdev6, bstdev7 = [],[],[],[],[],[],[]
+l1, l2, l3, l4, l5, l6, l7 = [],[],[],[],[],[],[]
+lstdev1, lstdev2, lstdev3, lstdev4, lstdev5, lstdev6, lstdev7 = [],[],[],[],[],[],[]
+h1, h2, h3, h4, h5, h6, h7 = [],[],[],[],[],[],[]
+hstdev1, hstdev2, hstdev3, hstdev4, hstdev5, hstdev6, hstdev7 = [],[],[],[],[],[],[]
+
+##########
+
+# grouping samples by SPAD value
+# group 1 = SPAD 10-15
+# group 2 = SPAD 15-20
+# group 3 = SPAD 20-25
+# group 4 = SPAD 25-30
+# group 5 = SPAD 30-35
+# group 6 = SPAD 35-40
+# group 7 = SPAD 40-45
+
+for i in range(len(df1["SPAD"])):
+    if (df1["SPAD"])[i] >= 10 and (df1["SPAD"])[i] < 15:
+        spad1.append((df1["SPAD"])[i])
+        spad_e1.append((df2["SPAD_e"])[i])
+        spad_estdev1.append((df2["SPAD_e stdev"])[i])
+        stdev1.append((df1["stdev"])[i])
+        lab1.append(((df1["L*"])[i], (df1["a*"])[i], (df1["b*"])[i]))
+        label1.append((df1["Leaf"])[i])
+        c1.append((df1["C*"])[i])
+        cstdev1.append((df1["C stdev"])[i])
+        a1.append((df1["a*"])[i])
+        astdev1.append((df1["a stdev"])[i])
+        b1.append((df1["b*"])[i])
+        bstdev1.append((df1["b stdev"])[i])
+        l1.append((df1["L*"])[i])
+        lstdev1.append((df1["L stdev"])[i])
+        h1.append((df1["h"])[i])
+        hstdev1.append((df1["h stdev"])[i])
+    elif (df1["SPAD"])[i] >= 15 and (df1["SPAD"])[i] < 20:
+        spad2.append((df1["SPAD"])[i])
+        spad_e2.append((df2["SPAD_e"])[i])
+        spad_estdev2.append((df2["SPAD_e stdev"])[i])
+        stdev2.append((df1["stdev"])[i])
+        lab2.append(((df1["L*"])[i], (df1["a*"])[i], (df1["b*"])[i]))
+        label2.append((df1["Leaf"])[i])
+        c2.append((df1["C*"])[i])
+        cstdev2.append((df1["C stdev"])[i])
+        a2.append((df1["a*"])[i])
+        astdev2.append((df1["a stdev"])[i])
+        b2.append((df1["b*"])[i])
+        bstdev2.append((df1["b stdev"])[i])
+        l2.append((df1["L*"])[i])
+        lstdev2.append((df1["L stdev"])[i])
+        h2.append((df1["h"])[i])
+        hstdev2.append((df1["h stdev"])[i])
+    elif (df1["SPAD"])[i] >= 20 and (df1["SPAD"])[i] < 25:
+        spad3.append((df1["SPAD"])[i])
+        spad_e3.append((df2["SPAD_e"])[i])
+        spad_estdev3.append((df2["SPAD_e stdev"])[i])
+        stdev3.append((df1["stdev"])[i])
+        lab3.append(((df1["L*"])[i], (df1["a*"])[i], (df1["b*"])[i]))
+        label3.append((df1["Leaf"])[i])
+        c3.append((df1["C*"])[i])
+        cstdev3.append((df1["C stdev"])[i])
+        a3.append((df1["a*"])[i])
+        astdev3.append((df1["a stdev"])[i])
+        b3.append((df1["b*"])[i])
+        bstdev3.append((df1["b stdev"])[i])
+        l3.append((df1["L*"])[i])
+        lstdev3.append((df1["L stdev"])[i])
+        h3.append((df1["h"])[i])
+        hstdev3.append((df1["h stdev"])[i])
+    elif (df1["SPAD"])[i] >= 25 and (df1["SPAD"])[i] < 30:
+        spad4.append((df1["SPAD"])[i])
+        spad_e4.append((df2["SPAD_e"])[i])
+        spad_estdev4.append((df2["SPAD_e stdev"])[i])
+        stdev4.append((df1["stdev"])[i])
+        lab4.append(((df1["L*"])[i], (df1["a*"])[i], (df1["b*"])[i]))
+        label4.append((df1["Leaf"])[i])
+        c4.append((df1["C*"])[i])
+        cstdev4.append((df1["C stdev"])[i])
+        a4.append((df1["a*"])[i])
+        astdev4.append((df1["a stdev"])[i])
+        b4.append((df1["b*"])[i])
+        bstdev4.append((df1["b stdev"])[i])
+        l4.append((df1["L*"])[i])
+        lstdev4.append((df1["L stdev"])[i])
+        h4.append((df1["h"])[i])
+        hstdev4.append((df1["h stdev"])[i])
+    elif (df1["SPAD"])[i] >= 30 and (df1["SPAD"])[i] < 35:
+        spad5.append((df1["SPAD"])[i])
+        spad_e5.append((df2["SPAD_e"])[i])
+        spad_estdev5.append((df2["SPAD_e stdev"])[i])
+        stdev5.append((df1["stdev"])[i])
+        lab5.append(((df1["L*"])[i], (df1["a*"])[i], (df1["b*"])[i]))
+        label5.append((df1["Leaf"])[i])
+        c5.append((df1["C*"])[i])
+        cstdev5.append((df1["C stdev"])[i])
+        a5.append((df1["a*"])[i])
+        astdev5.append((df1["a stdev"])[i])
+        b5.append((df1["b*"])[i])
+        bstdev5.append((df1["b stdev"])[i])
+        l5.append((df1["L*"])[i])
+        lstdev5.append((df1["L stdev"])[i])
+        h5.append((df1["h"])[i])
+        hstdev5.append((df1["h stdev"])[i])
+    elif (df1["SPAD"])[i] >= 35 and (df1["SPAD"])[i] < 40:
+        spad6.append((df1["SPAD"])[i])
+        spad_e6.append((df2["SPAD_e"])[i])
+        spad_estdev6.append((df2["SPAD_e stdev"])[i])
+        stdev6.append((df1["stdev"])[i])
+        lab6.append(((df1["L*"])[i], (df1["a*"])[i], (df1["b*"])[i]))
+        label6.append((df1["Leaf"])[i])
+        c6.append((df1["C*"])[i])
+        cstdev6.append((df1["C stdev"])[i])
+        a6.append((df1["a*"])[i])
+        astdev6.append((df1["a stdev"])[i])
+        b6.append((df1["b*"])[i])
+        bstdev6.append((df1["b stdev"])[i])
+        l6.append((df1["L*"])[i])
+        lstdev6.append((df1["L stdev"])[i])
+        h6.append((df1["h"])[i])
+        hstdev6.append((df1["h stdev"])[i])
+    elif (df1["SPAD"])[i] >= 40 and (df1["SPAD"])[i] < 45:
+        spad7.append((df1["SPAD"])[i])
+        spad_e7.append((df2["SPAD_e"])[i])
+        spad_estdev7.append((df2["SPAD_e stdev"])[i])
+        stdev7.append((df1["stdev"])[i])
+        lab7.append(((df1["L*"])[i], (df1["a*"])[i], (df1["b*"])[i]))
+        label7.append((df1["Leaf"])[i])
+        c7.append((df1["C*"])[i])
+        cstdev7.append((df1["C stdev"])[i])
+        a7.append((df1["a*"])[i])
+        astdev7.append((df1["a stdev"])[i])
+        b7.append((df1["b*"])[i])
+        bstdev7.append((df1["b stdev"])[i])
+        l7.append((df1["L*"])[i])
+        lstdev7.append((df1["L stdev"])[i])
+        h7.append((df1["h"])[i])
+        hstdev7.append((df1["h stdev"])[i])
+    else:
+        raise Exception("Error")
+    
+
+##########
+
+# creating palette figure
+
+plt.figure(figsize = (18,10), dpi = 200) # setting figure size
+
+# setting SPAD grouping for palette shades (1: 10-15, 2: 15-20, 3: 20-25, 4: 25-30, 5: 30-35, 6: 35-40, 7: 40-45)
+spad = spad1
+spad_e = spad_e1
+spad_estdev = spad_estdev1
+stdev = stdev1
+l = l1
+lstdev = lstdev1
+a = a1
+astdev = astdev1
+b = b1
+bstdev = bstdev1
+c = c1
+cstdev = cstdev1
+h = h1
+hstdev = hstdev1
+lab = lab1
+label = label1
+
+##########
+
+# converting CW-LAB shades to RGB for visualisation
+
+x = np.arange(len(lab))
+for i in range(len(lab)):
+    placeholder = lab[i]
+    lableaf = LabColor(placeholder[0],placeholder[1], placeholder[2], illuminant="d65")
+    rgbleaf = convert_color(lableaf,sRGBColor).get_rgb_hex()
+
+    plt.bar(x[i], spad[i], color = rgbleaf, width = 1, edgecolor = '#4f4d4d', yerr = stdev[i], capsize = 2, ecolor = "#4f4d4d") # adding standard deviation for SPAD meausrements for each leaf disk
+
+##########
+
+# plotting graph
+
+plt.xlabel("Leaf")
+plt.ylabel("SPAD")
+plt.title("SPAD 20-25 Against Leaf Colour") #change SPAD range text
+plt.xticks(ticks = x, labels = label, rotation = 45) #change label name text
+# plt.text(np.mean(x), max(spad7)/2, "L*: %s-%s\na*: %s-%s\nb*: %s-%s\nC*: %s-%s\nh: %s-%s\n"%(round(min(l7),2), round(max(l7),2), round(min(a7),2), round(max(a7),2), round(min(b7),2), round(max(b7),2), round(min(c7),2), round(max(c7),2), round(min(h7),2), round(max(h7),2)), fontsize = 16, ha='center', va='center', c = "w")
+
+# uncomment specific SPAD grouping to save figure
+
+# plt.savefig("SPAD 10_15 bar chart.png", dpi = 1200, bbox_inches = 'tight')
+# plt.savefig("SPAD 15_20 bar chart.png", dpi = 1200, bbox_inches = 'tight')
+# plt.savefig("SPAD 20_25 bar chart.png", dpi = 1200, bbox_inches = 'tight')
+# plt.savefig("SPAD 25_30 bar chart.png", dpi = 1200, bbox_inches = 'tight')
+# plt.savefig("SPAD 30_35 bar chart.png", dpi = 1200, bbox_inches = 'tight')
+# plt.savefig("SPAD 35_40 bar chart.png", dpi = 1200, bbox_inches = 'tight')
+# plt.savefig("SPAD 40_45 bar chart.png", dpi = 1200, bbox_inches = 'tight')
+plt.show()
+
+##########
+
+# defining unique shades for each SPAD grouping
+
+shades1 = [0,1] # index of each unique shade for each SPAD grouping
+shades2 = [0,1,2,3,4,5]
+shades3 = [0,1,3,4,6,7,10,23,27,28]
+shades4 = [0,1,2,3,4,5,11,22,27]
+shades5 = [0,2,3,4,5,6,16,27,36,45]
+shades6 = [0,3,12]
+shades7 = [0,5]
+
+##########
+
+# plotting unique shades for each SPAD grouping
+
+shade = shades1 #change shades variable for each SPAD grouping
+x = 0
+plt.figure(figsize=(4,3))
+for i in shade:
+    placeholder = lab[i]
+    lableaf = LabColor(placeholder[0],placeholder[1], placeholder[2], illuminant="d65")
+    rgbleaf = convert_color(lableaf,sRGBColor).get_rgb_hex()
+
+    plt.bar(x, len(shade)/2, color = rgbleaf, width = 0.8, edgecolor = '#686968', capsize = 2)
+    x += 1
+# plt.ylim(-0.4,len(shades)+0.05)
+# plt.xlim(-0.5, len(shades)-0.5)
+plt.axis("off")
+
+##########
+
+# uncomment specific SPAD grouping to save figure
+
+# plt.savefig("SPAD 10_15 shades.png", dpi = 1200, bbox_inches = 'tight')
+# plt.savefig("SPAD 15_20 shades.png", dpi = 1200, bbox_inches = 'tight')
+# plt.savefig("SPAD 20_25 shades.png", dpi = 1200, bbox_inches = 'tight')
+# plt.savefig("SPAD 25_30 shades.png", dpi = 1200, bbox_inches = 'tight')
+# plt.savefig("SPAD 30_35 shades.png", dpi = 1200, bbox_inches = 'tight')
+# plt.savefig("SPAD 35_40 shades.png", dpi = 1200, bbox_inches = 'tight')
+# plt.savefig("SPAD 40_45 shades.png", dpi = 1200, bbox_inches = 'tight')
+plt.show()
+
+##########
+
+# creating figure for all SPAD grouping unique shades
+
+x = 0
+plt.figure(figsize=(15,3))
+for i in shades1:
+    placeholder = lab1[i]
+    lableaf = LabColor(placeholder[0],placeholder[1], placeholder[2], illuminant="d65")
+    rgbleaf = convert_color(lableaf,sRGBColor).get_rgb_hex()
+
+    plt.bar(x, 1, color = rgbleaf, width = 0.8, edgecolor = '#686968', capsize = 2)
+    x += 1
+x += .6
+for i in shades2:
+    placeholder = lab2[i]
+    lableaf = LabColor(placeholder[0],placeholder[1], placeholder[2], illuminant="d65")
+    rgbleaf = convert_color(lableaf,sRGBColor).get_rgb_hex()
+
+    plt.bar(x, 1, color = rgbleaf, width = 0.8, edgecolor = '#686968', capsize = 2)
+    x += 1
+x += .6
+for i in shades3:
+    placeholder = lab3[i]
+    lableaf = LabColor(placeholder[0],placeholder[1], placeholder[2], illuminant="d65")
+    rgbleaf = convert_color(lableaf,sRGBColor).get_rgb_hex()
+
+    plt.bar(x, 1, color = rgbleaf, width = 0.8, edgecolor = '#686968', capsize = 2)
+    x += 1
+x += .6
+for i in shades4:
+    placeholder = lab4[i]
+    lableaf = LabColor(placeholder[0],placeholder[1], placeholder[2], illuminant="d65")
+    rgbleaf = convert_color(lableaf,sRGBColor).get_rgb_hex()
+
+    plt.bar(x, 1, color = rgbleaf, width = 0.8, edgecolor = '#686968', capsize = 2)
+    x += 1
+x += .6
+for i in shades5:
+    placeholder = lab5[i]
+    lableaf = LabColor(placeholder[0],placeholder[1], placeholder[2], illuminant="d65")
+    rgbleaf = convert_color(lableaf,sRGBColor).get_rgb_hex()
+
+    plt.bar(x, 1, color = rgbleaf, width = 0.8, edgecolor = '#686968', capsize = 2)
+    x += 1
+x += .6
+for i in shades6:
+    placeholder = lab6[i]
+    lableaf = LabColor(placeholder[0],placeholder[1], placeholder[2], illuminant="d65")
+    rgbleaf = convert_color(lableaf,sRGBColor).get_rgb_hex()
+
+    plt.bar(x, 1, color = rgbleaf, width = 0.8, edgecolor = '#686968', capsize = 2)
+    x += 1
+x += .6
+for i in shades7:
+    placeholder = lab7[i]
+    lableaf = LabColor(placeholder[0],placeholder[1], placeholder[2], illuminant="d65")
+    rgbleaf = convert_color(lableaf,sRGBColor).get_rgb_hex()
+
+    plt.bar(x, 1, color = rgbleaf, width = 0.8, edgecolor = '#686968', capsize = 2)
+    x += 1
+
+# plt.ylim(-0.4,len(shades)+0.05)
+# plt.xlim(-0.5, len(shades)-0.5)
+plt.axis("off")
+# plt.savefig("SPAD shades overview grouped.jpg", dpi = 1200)
+plt.show()
